@@ -1,54 +1,26 @@
-import express from "express";
-import cors from "cors";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+const express = require("express");
+const dotenv = require("dotenv");
+const connectDB = require("./config/db");
+const reservationRoutes = require("./routes/reservationRoutes");
+const cors = require("cors");
 
-// Load environment variables
 dotenv.config();
+connectDB();
 
-// Initialize Express app
 const app = express();
 
-// CORS Configuration
-const corsOptions = {
-  origin: "http://localhost:5173", // Allow requests from this origin
-  credentials: true, // Allow credentials (cookies, authorization headers)
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allow these methods
-  allowedHeaders: "Content-Type,Authorization", // Allow these headers
-};
-
-app.use(cors(corsOptions));
-
-// Middleware to parse JSON
+// Middleware
 app.use(express.json());
 
-// Handle preflight requests
-app.options("*", cors(corsOptions)); // Enable preflight requests for all routes
+// ✅ Updated CORS to match your frontend port
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
 
-// Database connection
-mongoose
-  .connect(process.env.MONGO_URI, {
-    dbName: "RESTURANT", // Replace with your database name
-  })
-  .then(() => {
-    console.log("Connected to database successfully!");
-  })
-  .catch((err) => {
-    console.error("Error connecting to database:", err.message);
-  });
+// Routes
+app.use("/reservation", reservationRoutes);
 
-// Reservation route
-app.post("/reservation/send", (req, res) => {
-  const { firstName, lastName, email, phone, date, time } = req.body;
-  console.log("Received reservation data:", { firstName, lastName, email, phone, date, time });
-
-  // Save the reservation to the database (add your logic here)
-  // For now, just send a success response
-  res.status(200).json({ message: "Reservation successful" });
-});
-
-// Start the server
+// Start server
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Server has started at port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

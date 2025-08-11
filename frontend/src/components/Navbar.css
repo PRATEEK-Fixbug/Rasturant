@@ -1,0 +1,33 @@
+.nav-button {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+  min-width: 80px;
+  backdrop-filter: blur(10px);
+}
+
+.nav-button:hover {
+  transform: translateY(-1px);
+}
+
+.nav-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .nav-button {
+    min-width: 60px;
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-button {
+    min-width: 50px;
+    font-size: 0.7rem;
+    padding: 0.375rem 0.5rem;
+  }
+}
